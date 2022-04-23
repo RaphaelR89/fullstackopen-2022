@@ -1,0 +1,23 @@
+note over browser
+user enters the data into the form
+end note
+
+note over browser
+inside spa.js, on submitting form
+fetch form element by calling document.getElementById('notes_form')
+prevent default handling by calling e.preventDefault()
+creates new note and pushing to notes array
+calling redrawNotes()
+sends as JSON newly created note to the server
+sendToServer(note)
+end note
+
+browser->server:HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server
+server accesses the data from req. object
+sends JSON back to the browser
+end note
+
+server-->browser:HTTP 201 status code, created
+server-->browser:{"message":"note created"}
