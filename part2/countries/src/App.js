@@ -29,7 +29,14 @@ function App() {
 					<County {...filteredCountries[0]} />
 				) : (
 					filteredCountries.map((country) => {
-						return <li key={country.name.common}>{country.name.common}</li>;
+						return (
+							<li key={country.name.common}>
+								{country.name.common}{' '}
+								<button onClick={(e) => setFilteredCountries([country])}>
+									show
+								</button>
+							</li>
+						);
 					})
 				)}
 			</div>
