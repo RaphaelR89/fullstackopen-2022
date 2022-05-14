@@ -34,13 +34,13 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
-			id: persons.length + 1,
 		};
-
-		setPersons(persons.concat(newPerson));
-		setFilteredPersons(persons.concat(newPerson));
-		setNewName('');
-		setNewNumber('');
+		axios.post('http://localhost:3001/persons', newPerson).then((response) => {
+			setPersons(persons.concat(response.data));
+			setFilteredPersons(persons.concat(response.data));
+			setNewName('');
+			setNewNumber('');
+		});
 	};
 
 	const filterPersons = (e) => {
@@ -49,7 +49,6 @@ const App = () => {
 		);
 		setFilteredPersons(matched);
 	};
-	console.log('persons', persons, ' filtered', filteredPersons);
 
 	return (
 		<div>
