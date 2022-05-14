@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/persons';
+import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -32,7 +32,7 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
-			id: persons.length + 1,
+			id: uuidv4(),
 		};
 
 		personService.create(newPerson).then((response) => {
@@ -44,11 +44,21 @@ const App = () => {
 	};
 
 	const filterPersons = (e) => {
-		console.log(persons);
 		const matched = persons.filter((person) =>
 			person.name.includes(e.target.value)
 		);
 		setFilteredPersons(matched);
+	};
+
+	const deletePerson = (id) => {
+		const deletedPerson = persons.find((p) => p.id === id);
+		const { name } = deletedPerson;
+
+		if (window.confirm(`Delete ${name}?`)) {
+			personService.remove(id);
+			setPersons(persons.filter((p) => p.id !== id));
+			setFilteredPersons(persons.filter((p) => p.id !== id));
+		}
 	};
 
 	return (
@@ -63,7 +73,7 @@ const App = () => {
 				newNumber={newNumber}
 			/>
 			<h2>Numbers</h2>
-			<Persons persons={filteredPersons} />
+			<Persons persons={filteredPersons} deletePerson={deletePerson} />
 		</div>
 	);
 };
