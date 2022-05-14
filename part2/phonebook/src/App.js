@@ -23,7 +23,17 @@ const App = () => {
 		// prevent adding names that already exist in the phonebook
 		const duplicateNames = persons.filter((person) => person.name === newName);
 		if (duplicateNames.length) {
-			alert(`${newName} is already added to phonebook`);
+			if (
+				window.confirm(
+					`${duplicateNames[0].name} is already added to phonebook, replace the old number with a new one?`
+				)
+			) {
+				const changedNumber = {
+					...duplicateNames[0],
+					number: newNumber,
+				};
+				personService.update(duplicateNames[0].id, changedNumber);
+			}
 			setNewName('');
 			setNewNumber('');
 			return;
