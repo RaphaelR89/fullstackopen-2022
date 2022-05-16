@@ -32,7 +32,18 @@ const App = () => {
 					...duplicateNames[0],
 					number: newNumber,
 				};
-				personService.update(duplicateNames[0].id, changedNumber);
+				// updating number of a person
+				personService
+					.update(duplicateNames[0].id, changedNumber)
+					.then((person) => {
+						// force components to rerender in order to display updated number
+						setPersons(
+							persons.map((p) => (p.id === person.id ? changedNumber : p))
+						);
+						setFilteredPersons(
+							persons.map((p) => (p.id === person.id ? changedNumber : p))
+						);
+					});
 			}
 			setNewName('');
 			setNewNumber('');
