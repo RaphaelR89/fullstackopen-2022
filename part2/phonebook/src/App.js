@@ -4,12 +4,14 @@ import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/persons';
 import { v4 as uuidv4 } from 'uuid';
+import Notification from '../src/components/Notification';
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filteredPersons, setFilteredPersons] = useState(persons.concat([]));
+	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
 		personService.getAll().then((response) => {
@@ -43,6 +45,23 @@ const App = () => {
 						setFilteredPersons(
 							persons.map((p) => (p.id === person.id ? changedNumber : p))
 						);
+						// show message that person's number has been updated
+						setMessage(`
+							${person.name}'s number has been updated
+						`);
+						setTimeout(() => {
+							setMessage(null);
+						}, 5000);
+					})
+					.catch((error) => {
+						setMessage(`Error, ${error}`);
+						setPersons(persons.filter((p) => p.id !== duplicateNames[0].id));
+						setFilteredPersons(
+							persons.filter((p) => p.id !== duplicateNames[0].id)
+						);
+						setTimeout(() => {
+							setMessage(null);
+						}, 5000);
 					});
 			}
 			setNewName('');
@@ -61,6 +80,14 @@ const App = () => {
 			setFilteredPersons(persons.concat(newPerson));
 			setNewName('');
 			setNewNumber('');
+			setMessage(
+				`
+					Added ${response.name}
+					`
+			);
+			setTimeout(() => {
+				setMessage(null);
+			}, 5000);
 		});
 	};
 
@@ -85,6 +112,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification message={message} />
 			<Filter filterPersons={filterPersons} />
 			<PersonForm
 				addPerson={addPerson}
