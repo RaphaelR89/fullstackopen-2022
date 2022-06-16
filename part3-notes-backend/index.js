@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 
 app.use(express.json());
-// const bodyParser = require('bodyParser');
 
 let notes = [
 	{
@@ -46,12 +45,14 @@ app.get('/api/notes/:id', (request, response) => {
 app.delete('/api/notes/:id', (request, response) => {
 	const id = Number(request.params.id);
 	notes = notes.filter((note) => note.id !== id);
+
 	response.status(204).end();
 });
 
 const generateId = () => {
-	const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-	return maxId;
+	const maxId =
+		notes.length > 0 ? Math.max(...notes.map((note) => note.id)) : 0;
+	return maxId + 1;
 };
 
 app.post('/api/notes', (request, response) => {
@@ -74,6 +75,5 @@ app.post('/api/notes', (request, response) => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT);
+console.log(`Server running on port ${PORT}`);
