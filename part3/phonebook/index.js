@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 app.use(express.json());
 
 let persons = [
@@ -25,23 +26,24 @@ let persons = [
 	},
 ];
 
-// step1
+//step 1
 app.get('/api/persons', (request, response) => {
 	response.json(persons);
 });
 
-// step2
+// step 2
 app.get('/info', (request, response) => {
-	response.send(`
-	<p>Phonebook has info for ${persons.length} people</p>
-	<p>${new Date().toUTCString()}</p>
-	`);
+	response.send(
+		`<p>Phonebook has info for ${persons.length} </p>
+		<p>${new Date().toUTCString()}</p>`
+	);
 });
 
-// step3
+//step 3
 app.get('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id);
-	const person = persons.find((p) => p.id === id);
+	const person = persons.find((person) => person.id === id);
+
 	if (person) {
 		response.json(person);
 	} else {
@@ -49,35 +51,36 @@ app.get('/api/persons/:id', (request, response) => {
 	}
 });
 
-// step4
+// step 4
 app.delete('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id);
-	persons = persons.filter((p) => p.id !== id);
+	persons = persons.filter((person) => person.id !== id);
 	response.status(204).end();
 });
 
-// step5
+// step 5
 const generateId = () => {
-	const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-	return maxId;
+	const maxId = Math.max(...persons.map((p) => p.id));
+	return maxId + 1;
 };
 
 app.post('/api/persons', (request, response) => {
-	const body = request.body;
-	const name = body.name;
-	const number = body.number;
+	const { name, number } = request.body;
+
+	// step 6
 	if (!body) {
-		response.status(400).json({
-			error: 'content missing',
+		return response.status(400).json({
+			error: 'missing content',
 		});
 	}
 
-	// step6 error handling
 	if (!name || !number) {
 		return response.status(400).json({
-			error: 'name or number is missing',
+			error: 'name or number missing',
 		});
 	}
+
+	// check for unique name
 	if (persons.find((p) => p.name === name)) {
 		return response.status(400).json({
 			error: 'name must be unique',
@@ -85,9 +88,9 @@ app.post('/api/persons', (request, response) => {
 	}
 
 	const person = {
-		name: body.name,
-		number: body.number,
-		id: generateId() + 1,
+		name,
+		number,
+		id: generateId(),
 	};
 
 	persons = persons.concat(person);
