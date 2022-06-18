@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 
 app.use(express.json());
+app.use(morgan('tiny'));
 
 let persons = [
 	{
@@ -68,7 +70,7 @@ app.post('/api/persons', (request, response) => {
 	const { name, number } = request.body;
 
 	// step 6
-	if (!body) {
+	if (!request.body) {
 		return response.status(400).json({
 			error: 'missing content',
 		});
