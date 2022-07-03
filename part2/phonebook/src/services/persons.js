@@ -2,7 +2,9 @@ import axios from 'axios';
 const baseUrl = 'api/persons';
 
 const getAll = () => {
-	const request = axios.get(baseUrl);
+	const request = axios.get(
+		`https://thawing-tor-50399.herokuapp.com/${baseUrl}`
+	);
 	return request.then((response) => response.data);
 };
 
