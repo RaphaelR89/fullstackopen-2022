@@ -14,7 +14,12 @@ const App = () => {
 	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
-		personServices.getAll().then((response) => setPersons(response.data));
+		console.log(persons);
+		personServices.getAll().then((response) => {
+			console.log(response, persons);
+			setPersons(response.data);
+			console.log(persons);
+		});
 	}, []);
 
 	const addPerson = (e) => {
