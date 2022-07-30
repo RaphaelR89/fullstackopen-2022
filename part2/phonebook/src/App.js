@@ -14,13 +14,10 @@ const App = () => {
 	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
-		console.log(persons);
 		personServices.getAll().then((response) => {
-			console.log(response, persons);
 			setPersons(response.data);
-			console.log(persons);
 		});
-	}, []);
+	}, [persons]);
 
 	const addPerson = (e) => {
 		e.preventDefault();
@@ -41,9 +38,10 @@ const App = () => {
 				personServices
 					.update(duplicatedPersons[0].id, updatedPerson)
 					.then((response) => {
+						console.log(updatedPerson);
 						setPersons(
 							persons.map((person) =>
-								person.id === duplicatedPersons[0].id ? response.data : person
+								person.id === duplicatedPersons[0].id ? updatedPerson : person
 							)
 						);
 						setMessage(
@@ -64,11 +62,12 @@ const App = () => {
 		};
 
 		personServices.create(newPerson).then((response) => {
-			setPersons(persons.concat(response.data));
+			// setPersons(persons.concat(newPerson));
 			setNewName('');
 			setNewNumber('');
 			setMessage(`Added ${newPerson.name}`);
 			setTimeout(() => setMessage(null), 5000);
+			return;
 		});
 	};
 
